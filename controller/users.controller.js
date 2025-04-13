@@ -30,7 +30,7 @@ function getById(req, res, next) {
 }
 
 function create(req, res, next) {
-    console.log('create');
+    console.log('create new user');
     userService.create(req.body)
         .then(() => res.json({ message: 'User created' }))
         .catch(next);

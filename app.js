@@ -13,6 +13,7 @@ app.use(cors());
 // api routes
 app.use('/users', require('./controller/users.controller'));
 app.use('/roles', require('./controller/roles.controller'));
+app.use('/subject', require('./controller/tenant/subject.controller'));
 
 app.get('/test', (req, res) => { 
     res.send( { 
