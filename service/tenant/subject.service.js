@@ -11,11 +11,10 @@ module.exports = {
 };
 
 async function getAll() {
-
     const dbName="sms_aimet1744435250123";
-    tenantdb.tenantdb(dbName)
-        .then(db => db.subject.findAll())        
-        .catch(err=>console.log(err));
+    const data = await tenantdb.tenantdb(dbName)
+    console.log(data);
+    return data.subject.findAll(); 
 }
     
 
