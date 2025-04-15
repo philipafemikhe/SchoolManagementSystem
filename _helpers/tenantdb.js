@@ -1,18 +1,22 @@
 const config = require('config.json');
 const mysql = require('mysql2/promise');
 const { Sequelize } = require('sequelize');
+const consoler = require('_helpers/consoler');
+
 
 const util = require('util');
 
 
-let dbName = 'sms_afemi1744434399262';
+var dbName = 'sms_afemi1744434399262';
+var tenantConnection = {};
 
+connectToDb(dbName);
 
-async function tenantdb(dbName) {
-    tenantConnection = {};
+async function connectToDb(dbName) {
+    
     // create db if it doesn't already exist
-    console.log('running initializeTenantDB with db ' + dbName);
-    if(dbName != ''){
+    consoler.log('connecting to tenant DB  ' + dbName);
+    if((dbName != undefined) && (dbName != '')){
         const { host, port, user, password, database } = config.database;
         const connection = await mysql.createConnection({ host, port, user, password });
         await connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\`;`);
@@ -36,9 +40,17 @@ async function tenantdb(dbName) {
 
         // sync all models with database
         await sequelize.sync({ alter: true });
-        console.log(util.inspect(tenantConnection, { showHidden: false, depth: null, colors: true }));
-        return tenantConnection;
+        consoler.log(tenantConnection);
+        consoler.log('Tenant connection established');
+        // return tenantConnection;
     }  
 }
 
-module.exports.tenantdb = tenantdb;
+module.exports.db = dbName;
+module.exports.tenantConnection = tenantConnection;
+
+// module.exports.tenantdb = tenantdb(global.dbName);
+
+
+// module.exports.tenantdb = tenantdb(global.dbName);
+// module.exports.tenantdb = {tenantdb, dbName, tenantConnection};

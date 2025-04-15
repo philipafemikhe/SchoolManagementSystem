@@ -4,21 +4,39 @@ const Joi = require('joi');
 const validateRequest = require('_middleware/validate-request');
 const Role = require('enum/role');
 const subjectService = require('../../service/tenant/subject.service');
+const resolveTenant = require('../../_middleware/resolve-tenant');
+const  tenantdb = require('../../_helpers/tenantdb');
 
-// routes
+const consoler = require('_helpers/consoler');
 
-router.get('/', getAll);
+
+
+router.use((req, res, next) => {
+  tenantdb.dbName = "sms_aimet1744435250123";
+  consoler.log('Middleware - Establiishing tenant connection to ' + tenantdb.dbName);
+  tenantdb.newConnetion;
+  // tenantdb;
+  // global.tenantdb = tenantdb.tenantdb(global.dbName);
+  // global.tenantdb = tenantdb(global.dbName);
+  // resolveTenant.tenant();
+  next()
+});
+
+
+
+router.get('/',getAll);
 router.get('/:id', getById);
 router.post('/', create);
 // router.put('/:id', updateSchema, update);
 router.put('/:id', update);
 router.delete('/:id', _delete);
 
+
 module.exports = router;
 
 
 function getAll(req, res, next) {
-    console.log('getAll subjectService-' + JSON.stringify(subjectService));
+    console.warn('getAll subject');
     subjectService.getAll()
         .then(users => res.json(users))
         .catch(next);

@@ -1,6 +1,8 @@
 ﻿const bcrypt = require('bcryptjs');
 const db = require('_helpers/db');
 const { tenantdb, dbName, initializeTenantDB } = require('_helpers/tenantdb');
+const consoler = require('_helpers/consoler');
+
 
 module.exports = {
     getAll,
@@ -11,7 +13,7 @@ module.exports = {
 };
 
 async function getAll() {
-    console.log('User Service getAll...' + JSON.stringify(db));
+    consoler.error('User Service getAll...' + global.dbName);
     return await db.users.findAll();
 }
 
@@ -25,7 +27,7 @@ async function create(params) {
     if (await db.users.findOne({ where: { email: params.email } })) {
             throw 'Email "' + params.email + '" is already registered';
         }
-        console.log('new user ' + params);
+        consoler.log('new user ' + params);
         const user = new db.users(params);
         
         // hash password
@@ -33,13 +35,13 @@ async function create(params) {
 
         // save user
         await user.save();
-        console.log('new user saved');
+        consoler.log('new user saved');
         newdb  = 'sms_' + params.lastName.substring(0,5) + Date.now();
-        console.log('User created, initializing tenant database dbName = ' + newdb);
+        consoler.log('User created, initializing tenant database dbName = ' + newdb);
         initializeTenantDB(newdb);
         return createTenant(newdb, user);
     }catch(e){
-        console.log('Error creating user ' + e);
+        consoler.error('Error creating user ' + e);
     }
     
 }

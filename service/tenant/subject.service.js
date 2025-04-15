@@ -1,5 +1,40 @@
-var  tenantdb = require('../../_helpers/tenantdb');
+const  tenantdb = require('../../_helpers/tenantdb');
 const util = require('util');
+const consoler = require('_helpers/consoler');
+const config = require('config.json');
+const mysql = require('mysql2/promise');
+const { Sequelize } = require('sequelize');
+
+
+async function connectToDb(){
+    consoler.log('connecting to tenant DB  ' + tenantdb.dbName);
+    var tenantConnection = {};
+    const { host, port, user, password, database } = config.database;
+    const connection = await mysql.createConnection({ host, port, user, password });
+    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${tenantdb.dbName}\`;`);
+
+    // connect to db
+    const sequelize = new Sequelize(tenantdb.dbName, user, password, { dialect: 'mysql' });
+
+    SchoolArm = require('../../model/tenant/school_arms.model')(sequelize);
+    ArmClass = require('../../model/tenant/arm_class.model')(sequelize);
+    Subject = require('../../model/tenant/subject.model')(sequelize);
+
+
+    SchoolArm.hasMany(ArmClass);
+    ArmClass.belongsTo(SchoolArm);
+    Subject.belongsToMany(SchoolArm, { through: 'SchoolArm_Subject' });
+    SchoolArm.belongsToMany(Subject, { through: 'SchoolArm_Subject' });
+    
+    tenantConnection.schoolArm = SchoolArm;
+    tenantConnection.armClass = ArmClass;
+    tenantConnection.subject = Subject;
+
+    // sync all models with database
+    await sequelize.sync({ alter: true });
+    return tenantConnection;
+}
+
 
 
 module.exports = {
@@ -11,10 +46,14 @@ module.exports = {
 };
 
 async function getAll() {
-    const dbName="sms_aimet1744435250123";
-    const data = await tenantdb.tenantdb(dbName)
-    console.log(data);
-    return data.subject.findAll(); 
+    try{
+        consoler.log('Fetching data from db ' + tenantdb.dbName);
+        var conn = await connectToDb();
+        return conn.subject.findAll();
+    }catch(e){
+        consoler.error(e);
+        throw Error ('There was an error ' + e);
+    }
 }
     
 

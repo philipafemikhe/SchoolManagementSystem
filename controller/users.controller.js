@@ -5,6 +5,12 @@ const validateRequest = require('_middleware/validate-request');
 const Role = require('enum/role');
 const userService = require('../service/user.service');
 
+const consoler = require('_helpers/consoler');
+
+
+
+
+
 // routes
 
 router.get('/', getAll);
@@ -18,6 +24,7 @@ module.exports = router;
 // route functions 
 
 function getAll(req, res, next) {
+    consoler.log('Get all users from');
     userService.getAll()
         .then(users => res.json(users))
         .catch(next);
@@ -30,7 +37,7 @@ function getById(req, res, next) {
 }
 
 function create(req, res, next) {
-    console.log('create new user');
+    consoler.log('create new user');
     userService.create(req.body)
         .then(() => res.json({ message: 'User created' }))
         .catch(next);
@@ -51,7 +58,7 @@ function _delete(req, res, next) {
 // schema functions
 
 function createSchema(req, res, next) {
-    console.log('createSchema');
+    consoler.log('createSchema');
     const schema = Joi.object({
         title: Joi.string().required(),
         firstName: Joi.string().required(),

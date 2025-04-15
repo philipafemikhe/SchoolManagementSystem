@@ -1,0 +1,17 @@
+connecting to tenant DB  sms_afemi1744434399262
+{ schoolArm: SchoolArm, armClass: ArmClass, subject: Subject }
+Tenant connection established
+New request on Url /subject/
+Host localhost
+path /subject/
+method GET
+Middleware - Establiishing tenant connection to sms_aimet1744435250123
+Fetching data from db sms_aimet1744435250123
+connecting to tenant DB  sms_aimet1744435250123
+New request on Url /subject/
+Host localhost
+path /subject/
+method GET
+Middleware - Establiishing tenant connection to sms_aimet1744435250123
+Fetching data from db sms_aimet1744435250123
+connecting to tenant DB  sms_aimet1744435250123
