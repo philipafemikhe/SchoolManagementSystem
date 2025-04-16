@@ -10,3 +10,12 @@ Retrieved token from request eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOj
 User detail retrieved from token, userId 1
 User verified with token
 Get all users from
+New request on Url /users/
+Host localhost
+path /users/
+method GET
+global.isLogedOut false
+Retrieved token from request eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NDgyMjY4MH0.o5ultsd2Ex_QeAl7Wlr-6_e_Yh2n5CvwpsCkKoRI7EM
+User detail retrieved from token, userId 1
+User verified with token
+Get all users from

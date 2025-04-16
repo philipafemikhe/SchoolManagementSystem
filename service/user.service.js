@@ -1,6 +1,6 @@
 ﻿const bcrypt = require('bcrypt');
 const db = require('_helpers/db');
-const { tenantdb, dbName, initializeTenantDB } = require('_helpers/tenantdb');
+// const { tenantdb, dbName, initializeTenantDB } = require('_helpers/tenantdb');
 const consoler = require('_helpers/consoler');
 const resolveTenant = require('../_middleware/resolveTenant');
 
@@ -17,7 +17,8 @@ module.exports = {
 
 async function getAll() {
     consoler.error('User Service getAll...' + global.dbName);
-    return await db.users.findAll({ include : Role });
+    // return await db.users.findAll({ include : [Role, Tenant ] });
+    return await db.users.findAll({ include: { all: true, nested: true } });
 }
 
 async function getById(id) {

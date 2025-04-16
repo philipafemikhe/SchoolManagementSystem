@@ -21,10 +21,19 @@ async function initialize() {
     Tenant = require('../model/tenant.model')(sequelize);
 
 
-    User.hasOne(Role);
-    Tenant.hasOne(User);
+    // User.hasOne(Role);
+    // Tenant.hasOne(User);
+
+    User.belongsToMany(Role, { through: 'Role_User' });
+    Role.belongsToMany(User, { through: 'Role_User' });
+    User.hasOne(Tenant);
+    Tenant.belongsTo(User);
+
+
     Role.belongsToMany(Permission, { through: 'Role_Permission' });
     Permission.belongsToMany(Role, { through: 'Role_Permission' });
+
+    
     
     db.users = User;
     db.roles = Role;

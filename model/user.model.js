@@ -10,7 +10,7 @@ function model(sequelize) {
         title: { type: DataTypes.STRING, allowNull: false },
         firstName: { type: DataTypes.STRING, allowNull: false },
         lastName: { type: DataTypes.STRING, allowNull: false },
-        role_id: { type: DataTypes.INTEGER, references: { model: Role, key: 'id' }}
+        // role_id: { type: DataTypes.INTEGER, references: { model: Role, key: 'id' }}
     };
 
     const options = {
