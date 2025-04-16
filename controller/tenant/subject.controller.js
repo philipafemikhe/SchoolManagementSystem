@@ -4,24 +4,72 @@ const Joi = require('joi');
 const validateRequest = require('_middleware/validate-request');
 const Role = require('enum/role');
 const subjectService = require('../../service/tenant/subject.service');
-const resolveTenant = require('../../_middleware/resolve-tenant');
+const tenantService = require('../../service/tenant.service');
+const userService = require('../../service/user.service');
 const  tenantdb = require('../../_helpers/tenantdb');
+const jwt = require('jsonwebtoken');
+const config = require('config.json');
+const jwtSecret = config.JWT_SECRET;
+const resolveTenant = require('../../_middleware/resolveTenant');
+
+
 
 const consoler = require('_helpers/consoler');
 
 
 
-router.use((req, res, next) => {
-  tenantdb.dbName = "sms_aimet1744435250123";
-  consoler.log('Middleware - Establiishing tenant connection to ' + tenantdb.dbName);
-  tenantdb.newConnetion;
-  // tenantdb;
-  // global.tenantdb = tenantdb.tenantdb(global.dbName);
-  // global.tenantdb = tenantdb(global.dbName);
-  // resolveTenant.tenant();
-  next()
-});
+// router.use((req, res, next) => {
+//   tenantdb.dbName = "sms_aimet1744435250123";
+//   consoler.log('Middleware - Establiishing tenant connection to ' + tenantdb.dbName);
+//   tenantdb.newConnetion;
+//   // tenantdb;
+//   // global.tenantdb = tenantdb.tenantdb(global.dbName);
+//   // global.tenantdb = tenantdb(global.dbName);
+//   // resolveTenant.tenant();
+//   next()
+// });
 
+
+router.use((req, res, next ) => {
+  // const token = req.cookies.token;
+    const token = req.get('token');
+  consoler.log('subject controller - token from request ' + token);
+  if(!token) {
+    return res.status(401).json( { message: 'Unauthorized'} );
+  }
+
+  try {
+    const decoded = jwt.verify(token, jwtSecret);
+    req.userId = decoded.userId;
+    consoler.log('User identified with token, userId ' + decoded.userId);
+    userService.getById(decoded.userId)
+        .then((user)=>{
+            if(user){
+                consoler.log('User details ' + JSON.stringify(user));
+                tenantService.getByEmail(user.email)
+                    .then((tenant)=>{
+                        consoler.log('Tenant retrieved ' + JSON.stringify(tenant));
+                        resolveTenant.resolveTenant(tenant.database)
+                        .then((conn)=>{
+                            global.tenantConnection = conn;
+                            consoler.log('Tenant connection established!!!');
+                            next();
+                        })
+                        .catch((e)=>res.status(401).json( { message: 'Error ' + e} ));
+                    })
+                    .catch(next);
+            }else{
+                res.status(401).json( { message: 'User unauthorized'} ); 
+            }
+            next();
+        })
+        .catch(next);
+    
+  } catch(error) {
+    consoler.log(error);
+    res.status(401).json( { message: 'Unauthorized'} );
+  }
+})
 
 
 router.get('/',getAll);
@@ -36,7 +84,7 @@ module.exports = router;
 
 
 function getAll(req, res, next) {
-    console.warn('getAll subject');
+    consoler.log('getAll subjects');
     subjectService.getAll()
         .then(users => res.json(users))
         .catch(next);

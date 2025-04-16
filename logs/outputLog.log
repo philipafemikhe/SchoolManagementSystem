@@ -1,17 +1,12 @@
 connecting to tenant DB  sms_afemi1744434399262
 { schoolArm: SchoolArm, armClass: ArmClass, subject: Subject }
 Tenant connection established
-New request on Url /subject/
+New request on Url /users/
 Host localhost
-path /subject/
+path /users/
 method GET
-Middleware - Establiishing tenant connection to sms_aimet1744435250123
-Fetching data from db sms_aimet1744435250123
-connecting to tenant DB  sms_aimet1744435250123
-New request on Url /subject/
-Host localhost
-path /subject/
-method GET
-Middleware - Establiishing tenant connection to sms_aimet1744435250123
-Fetching data from db sms_aimet1744435250123
-connecting to tenant DB  sms_aimet1744435250123
+global.isLogedOut false
+Retrieved token from request eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NDgyMjY4MH0.o5ultsd2Ex_QeAl7Wlr-6_e_Yh2n5CvwpsCkKoRI7EM
+User detail retrieved from token, userId 1
+User verified with token
+Get all users from
