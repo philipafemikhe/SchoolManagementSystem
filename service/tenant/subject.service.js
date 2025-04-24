@@ -1,4 +1,3 @@
-const  tenantdb = require('../../_helpers/tenantdb');
 const util = require('util');
 const consoler = require('_helpers/consoler');
 const config = require('config.json');
@@ -38,11 +37,11 @@ async function getById(id) {
 async function create(params) {
     // validate
     try{
-    if (await tenantdb.subject.findOne({ where: { title: params.title } })) {
+    if (await global.tenantConnection.subject.findOne({ where: { title: params.title } })) {
             throw 'Title "' + params.title + '" is already registered';
         }
         console.log('new subject ' + params);
-        const subject = new tenantdb.subject(params);
+        const subject = new global.tenantConnection.subject(params);
         // save subject
         await subject.save();
         console.log('new subject saved');
@@ -58,7 +57,7 @@ async function update(id, params) {
 
     // validate
     // const emailChanged = params.email && subject.email !== params.email;
-    // if (emailChanged && await tenantdb.subject.findOne({ where: { email: params.email } })) {
+    // if (emailChanged && await global.tenantConnection.subject.findOne({ where: { email: params.email } })) {
     //     throw 'Email "' + params.email + '" is already registered';
     // }
 
@@ -80,7 +79,7 @@ async function _delete(id) {
 // helper functions
 
 async function getSubject(id) {
-    const subject = await tenantdb.subject.findByPk(id);
+    const subject = await global.tenantConnection.subject.findByPk(id);
     if (!subject) throw 'Subject not found';
     return subject;
 }

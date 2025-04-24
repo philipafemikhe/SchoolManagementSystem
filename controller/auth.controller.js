@@ -31,10 +31,18 @@ function login(req, res, next){
           return res.status(401).json( { message: 'Invalid credentials' } );
         }
         consoler.log('Password validated');
-        const token = jwt.sign({ userId: usr.id, email: usr.email}, jwtSecret );
-        res.cookie('token', token, { httpOnly: true });
+
+        const accessToken = jwt.sign({ userId: usr.id, email: usr.email}, jwtSecret , {
+            expiresIn: "2m"
+        });
+
+        const refreshToken = jwt.sign({ userId: usr.id, email: usr.email}, jwtSecret , {
+            expiresIn: "24h"
+        });
+
+        // res.cookie('token', token, { httpOnly: true });
         global.isLogedOut = false;
-        return res.status(200).json({ 'token' : token });
+        return res.status(200).json({ 'accessToken' : accessToken,  'refreshToken' : refreshToken });
     })
     .catch(next); 
 }
@@ -43,7 +51,11 @@ function login(req, res, next){
 function create(req, res, next) {
     consoler.log('create new user');
     userService.create(req.body)
-        .then(() => res.json({ message: 'User created' }))
+        .then((r) => {
+            consoler.log('Create user response ' + r);
+            if(undefined != r) res.json({ tenant: r });
+            throw Error('Provided role not valid');
+        })
         .catch(next);
 }
 

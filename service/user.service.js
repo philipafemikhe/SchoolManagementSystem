@@ -3,6 +3,9 @@ const db = require('_helpers/db');
 // const { tenantdb, dbName, initializeTenantDB } = require('_helpers/tenantdb');
 const consoler = require('_helpers/consoler');
 const resolveTenant = require('../_middleware/resolveTenant');
+const User = require('../model/user.model');
+const Tenant = require('../model/tenant.model');
+const Role = require('../model/role.model');
 
 
 
@@ -17,45 +20,90 @@ module.exports = {
 
 async function getAll() {
     consoler.error('User Service getAll...' + global.dbName);
-    // return await db.users.findAll({ include : [Role, Tenant ] });
+    // return await db.users.findAll({ include : [db.roles, db.tenants ] });
     return await db.users.findAll({ include: { all: true, nested: true } });
-}
+     // return await db.users.findAll(
+     //    {
+     //        include: [
+     //            {
+     //            model: Role,
+     //            as: 'Roles',
+     //            through: {attributes: []},
+     //            include: {
+     //              model: Permission,
+     //              through: {attributes: []}
+     //            },
+     //          },
+     //          {
+     //            model: Tenant
+     //          }
+     //        ]
+     //    });
+ }
 
 async function getById(id) {
     return await getUser(id);
 }
 
+
 async function create(params) {
-    // validate
     try{
-    if (await db.users.findOne({ where: { email: params.email } })) {
+        if (await db.users.findOne({ where: { email: params.email } })) {
             throw 'Email "' + params.email + '" is already registered';
         }
-        consoler.log('new user ' + params);
-        const user = new db.users(params);
+        consoler.log('new user ' + JSON.stringify(params));
         
-        // hash password
-        user.passwordHash = await bcrypt.hash(params.password, 10);
-        const role = db.roles.findOne({ where: {name : params.role } })
-            .then((r)=>{
-                        // save user
-                user.role_id = r.id;
-                user.save();
-                consoler.log('new user saved');
-                newdb  = 'sms_' + params.lastName.substring(0,5) + Date.now();
-                consoler.log('User created, initializing tenant database dbName = ' + newdb);
-                resolveTenant.resolveTenant(newdb)
-                    .then((conn)=>{
-                        global.tenantConnection = conn;
-                        consoler.log('Tenant databse migrated.');
-                        return createTenant(newdb, user);
-                    })
+
+        const role = await db.roles.findOne({ where: {name : params.role } });
+        consoler.log('Selected Role ' + JSON.stringify(role));
+        var response = null;
+        if(role){
+            consoler.log('new user role ' + JSON.stringify(role));
+            const passwordHash = await bcrypt.hash(params.password, 10);
+            newdb  = 'sms_' + params.lastName.substring(0,5) + Date.now();
+            const tenant = await db.tenants.create({
+                email : params.email, 
+                host: 'localhost', 
+                port: 3306, 
+                username : 'root', 
+                password : '', 
+                database : newdb,
+                User: [
+                    { 
+                        title :  params.title, 
+                        passwordHash : passwordHash, 
+                        firstName : params.firstName, 
+                        lastName : params.lastName, 
+                        email : params.email
+                    }
+                ]
+            },
+            {
+                include : [db.users] 
             })
+            .then((res)=>{
+                consoler.log('Tenant user created '+ JSON.stringify(res));
+                res.User.addRole(role.id, res.User.id);
+                response = res;
+                consoler.log('User role created');
+            });
+
+            consoler.log('Tenant created ' + JSON.stringify(tenant) + ', initializing tenant database dbName = ' + newdb);
+            const conn = await resolveTenant.resolveTenant(newdb);
+            consoler.log('Tenant db setup completed ' + JSON.stringify(conn));
+            global.tenantConnection = conn;
+            consoler.log('Tenant databse migrated.');
+            return response;                         
+        }else{
+            consoler.log('Role not found');
+            throw Error('Provided role not valid');
+        }
+        
         
     }catch(e){
-        consoler.error('Error creating user ' + e);
-    }
-    
+        consoler.log('Error creating user ' + e);
+        throw Error(e);
+    }    
 }
 
 async function update(id, params) {
@@ -91,9 +139,9 @@ async function getUser(id) {
 }
 
 async function createTenant(newdb, user){
+    consoler.log('createTenant');
     const tenant = new db.tenants({email:user.email, host:'localhost', port:3306, username: 'root', password:'', database:newdb, user_id:user.id});
-    await tenant.save();
-    console.log('Tenant details created');
+    return await tenant.save();
 }
 
 

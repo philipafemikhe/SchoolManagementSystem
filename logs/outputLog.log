@@ -1,6 +1,26 @@
-connecting to tenant DB  sms_afemi1744434399262
+New request on Url /roles/
+Host localhost
+path /roles/
+method GET
+global.isLogedOut false
+Retrieved token from request undefined
+New request on Url /subject/
+Host localhost
+path /subject/
+method GET
+checkTenantAuth - request  token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NDgyMjY4MH0.o5ultsd2Ex_QeAl7Wlr-6_e_Yh2n5CvwpsCkKoRI7EM
+User identified with token, userId 1
+User details {"id":1,"email":"philip@gmail.com","title":"Mr","firstName":"Philip","lastName":"Afemikhe","createdAt":"2025-04-22T20:58:39.000Z","updatedAt":"2025-04-22T20:58:39.000Z"}
+philip@gmail.com, db {}
+Tenant -{"id":1,"email":"philip@gmail.com","host":"localhost","port":3306,"username":"root","password":"","database":"sms_Afemi1745355519743","createdAt":"2025-04-22T20:58:39.000Z","updatedAt":"2025-04-22T20:58:39.000Z","UserId":1}
+Tenant service, tenant retrieved {"id":1,"email":"philip@gmail.com","host":"localhost","port":3306,"username":"root","password":"","database":"sms_Afemi1745355519743","createdAt":"2025-04-22T20:58:39.000Z","updatedAt":"2025-04-22T20:58:39.000Z","UserId":1}
+find by email philip@gmail.com, Tenant retrieved {"id":1,"email":"philip@gmail.com","host":"localhost","port":3306,"username":"root","password":"","database":"sms_Afemi1745355519743","createdAt":"2025-04-22T20:58:39.000Z","updatedAt":"2025-04-22T20:58:39.000Z","UserId":1}
+connecting to tenant DB  sms_Afemi1745355519743
 { schoolArm: SchoolArm, armClass: ArmClass, subject: Subject }
 Tenant connection established
+Tenant connection established!!!
+getAll subjects
+Subject service, getAll initiated
 New request on Url /users/
 Host localhost
 path /users/
@@ -9,7 +29,13 @@ global.isLogedOut false
 Retrieved token from request eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NDgyMjY4MH0.o5ultsd2Ex_QeAl7Wlr-6_e_Yh2n5CvwpsCkKoRI7EM
 User detail retrieved from token, userId 1
 User verified with token
-Get all users from
+Get all users
+New request on Url /roles/
+Host localhost
+path /roles/
+method GET
+global.isLogedOut false
+Retrieved token from request undefined
 New request on Url /users/
 Host localhost
 path /users/
@@ -18,4 +44,77 @@ global.isLogedOut false
 Retrieved token from request eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NDgyMjY4MH0.o5ultsd2Ex_QeAl7Wlr-6_e_Yh2n5CvwpsCkKoRI7EM
 User detail retrieved from token, userId 1
 User verified with token
-Get all users from
+Get all users
+New request on Url /auth/logout/
+Host localhost
+path /auth/logout/
+method GET
+Loging out user
+New request on Url /users/
+Host localhost
+path /users/
+method GET
+global.isLogedOut true
+New request on Url /subject/
+Host localhost
+path /subject/
+method GET
+checkTenantAuth - request  token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NDgyMjY4MH0.o5ultsd2Ex_QeAl7Wlr-6_e_Yh2n5CvwpsCkKoRI7EM
+User identified with token, userId 1
+User details {"id":1,"email":"philip@gmail.com","title":"Mr","firstName":"Philip","lastName":"Afemikhe","createdAt":"2025-04-22T20:58:39.000Z","updatedAt":"2025-04-22T20:58:39.000Z"}
+philip@gmail.com, db {}
+Tenant -{"id":1,"email":"philip@gmail.com","host":"localhost","port":3306,"username":"root","password":"","database":"sms_Afemi1745355519743","createdAt":"2025-04-22T20:58:39.000Z","updatedAt":"2025-04-22T20:58:39.000Z","UserId":1}
+Tenant service, tenant retrieved {"id":1,"email":"philip@gmail.com","host":"localhost","port":3306,"username":"root","password":"","database":"sms_Afemi1745355519743","createdAt":"2025-04-22T20:58:39.000Z","updatedAt":"2025-04-22T20:58:39.000Z","UserId":1}
+find by email philip@gmail.com, Tenant retrieved {"id":1,"email":"philip@gmail.com","host":"localhost","port":3306,"username":"root","password":"","database":"sms_Afemi1745355519743","createdAt":"2025-04-22T20:58:39.000Z","updatedAt":"2025-04-22T20:58:39.000Z","UserId":1}
+connecting to tenant DB  sms_Afemi1745355519743
+{ schoolArm: SchoolArm, armClass: ArmClass, subject: Subject }
+Tenant connection established
+Tenant connection established!!!
+getAll subjects
+Subject service, getAll initiated
+New request on Url /users/
+Host localhost
+path /users/
+method GET
+global.isLogedOut true
+New request on Url /users/
+Host localhost
+path /users/
+method GET
+global.isLogedOut true
+New request on Url /roles/
+Host localhost
+path /roles/
+method GET
+global.isLogedOut true
+New request on Url /users/
+Host localhost
+path /users/
+method GET
+global.isLogedOut true
+New request on Url /users/
+Host localhost
+path /users/
+method GET
+global.isLogedOut true
+New request on Url /auth/login/
+Host localhost
+path /auth/login/
+method POST
+Attempting login with email triumphant@gmail.com
+New request on Url /auth/login/
+Host localhost
+path /auth/login/
+method POST
+Attempting login with email triumph@gmail.com
+User found, validating password.  user {"id":3,"email":"triumph@gmail.com","title":"Master","firstName":"Triumph","lastName":"Afemikhe","createdAt":"2025-04-22T21:08:36.000Z","updatedAt":"2025-04-22T21:08:36.000Z","passwordHash":"$2b$10$c95lAiPCPeZ0fBJV5aW91uhfaZDSQh/GrfPmJ0KrKK7tS6aTkTOP6"}
+Password validated
+New request on Url /users/
+Host localhost
+path /users/
+method GET
+global.isLogedOut false
+Retrieved token from request eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoidHJpdW1waEBnbWFpbC5jb20iLCJpYXQiOjE3NDUzNTc3OTcsImV4cCI6MTc0NTQ0NDE5N30.faJNms2slKfbWQePdwavjqMI0mSM1NazHOjV7Wc4W7I
+User detail retrieved from token, userId 3
+User verified with token
+Get all users
