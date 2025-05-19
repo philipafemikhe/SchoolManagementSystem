@@ -37,19 +37,20 @@ async function getById(id) {
 async function create(params) {
     // validate
     try{
-    if (await global.tenantConnection.subject.findOne({ where: { title: params.title } })) {
+        if (await global.tenantConnection.subject.findOne({ where: { title: params.title } })) {
             throw 'Title "' + params.title + '" is already registered';
         }
         console.log('new subject ' + params);
         const subject = new global.tenantConnection.subject(params);
         // save subject
-        await subject.save();
-        console.log('new subject saved');
+        const new_subject = await subject.save();
+        console.log('new subject Created');
+        return new_subject;
         
     }catch(e){
         console.log('Error creating subject ' + e);
-    }
-    
+        return null;
+    }    
 }
 
 async function update(id, params) {

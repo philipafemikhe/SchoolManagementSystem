@@ -12,10 +12,10 @@ const consoler = require('_helpers/consoler');
 
 router.get('/', checkAuthMiddleware.checkTenantAuth, getAll);
 router.get('/:id', getById);
-router.post('/', create);
+router.post('/', checkAuthMiddleware.checkTenantAuth, create);
 // router.put('/:id', updateSchema, update);
-router.put('/:id', update);
-router.delete('/:id', _delete);
+router.put('/:id', checkAuthMiddleware.checkTenantAuth, update);
+router.delete('/:id', checkAuthMiddleware.checkTenantAuth, _delete);
 
 
 module.exports = router;
@@ -35,15 +35,25 @@ function getById(req, res, next) {
 }
 
 function create(req, res, next) {
-    console.log('create new subject');
+    consoler.log('create new subject');
     subjectService.create(req.body)
-        .then(() => res.json({ message: 'Subject created' }))
+        .then((data) => {
+            consoler.log(JSON.stringify(data));
+            if(null == data)
+                return res.status(500).json({message:'Request processing error'});
+            return res.status(201).json({message: 'Subject created', data});
+        })
         .catch(next);
 }
 
 function update(req, res, next) {
     subjectService.update(req.params.id, req.body)
-        .then(() => res.json({ message: 'Subject updated' }))
+        .then((data) => {
+            consoler.log(JSON.stringify(data));
+            if(null == data)
+                return res.status(500).json({message:'Request processing error'});
+            return res.status(203).json({message: 'Subject updated', data});
+        })
         .catch(next);
 }
 

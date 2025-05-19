@@ -25,7 +25,7 @@ async function resolveTenant(dbName) {
         SchoolArm.hasMany(ArmClass);
         ArmClass.belongsTo(SchoolArm);
         Subject.belongsToMany(SchoolArm, { through: 'SchoolArm_Subject' });
-        SchoolArm.belongsToMany(Subject, { through: 'SchoolArm_Subject' });
+        // SchoolArm.belongsToMany(Subject, { through: 'SchoolArm' });
         
         tenantConnection.schoolArm = SchoolArm;
         tenantConnection.armClass = ArmClass;
@@ -37,7 +37,8 @@ async function resolveTenant(dbName) {
         consoler.log('Tenant connection established');
         global.tenantConnection = tenantConnection;
         return tenantConnection;
-    }  
+    }
+    return null;  
 }
 
 module.exports.resolveTenant = resolveTenant;

@@ -13,6 +13,13 @@ app.use(cookieParser());
 // app.use(methodOverride('_method'));
 app.use(cors());
 
+const corsOptions ={
+    origin:'http://localhost:4000', 
+    credentials:false,            //access-control-allow-credentials:true
+    optionSuccessStatus:200
+}
+app.use(cors(corsOptions));
+
 
 
 
@@ -21,6 +28,10 @@ app.use((req, res, next)=>{
     consoler.log('Host ' + req.hostname);
     consoler.log('path ' + req.path);
     consoler.log('method ' + req.method);
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, OPTIONS");
     next();
 });
 
@@ -31,6 +42,8 @@ app.use('/users', require('./controller/users.controller'));
 app.use('/roles', require('./controller/roles.controller'));
 app.use('/subject', require('./controller/tenant/subject.controller'));
 app.use('/auth', require('./controller/auth.controller'));
+
+app.use('/arm', require('./controller/tenant/school-arm.controller'));
 
 app.get('/test', (req, res) => { 
     res.send( { 

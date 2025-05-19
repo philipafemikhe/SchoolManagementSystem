@@ -33,13 +33,14 @@ function login(req, res, next){
         consoler.log('Password validated');
 
         const accessToken = jwt.sign({ userId: usr.id, email: usr.email}, jwtSecret , {
-            expiresIn: "2m"
+            expiresIn: "60s"
         });
 
         const refreshToken = jwt.sign({ userId: usr.id, email: usr.email}, jwtSecret , {
-            expiresIn: "24h"
+            expiresIn: "72h"
         });
 
+        tokenSession = userService.createRefreshToken(refreshToken, usr.id);
         // res.cookie('token', token, { httpOnly: true });
         global.isLogedOut = false;
         return res.status(200).json({ 'accessToken' : accessToken,  'refreshToken' : refreshToken });

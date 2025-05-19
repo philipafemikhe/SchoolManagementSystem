@@ -53,6 +53,7 @@ async function initialize() {
     db.roles = Role;
     db.permissions = Permission;
     db.tenants = Tenant;
+    db.userTokens = UserToken;
 
     // sync all models with database
     await sequelize.sync({ alter: true });

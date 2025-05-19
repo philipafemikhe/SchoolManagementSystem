@@ -6,11 +6,17 @@ module.exports = model;
 const SubjectCategory = {
     SCIENCE : 'SCIENCE',
     ART : 'ART',
-    SOCIAL_SCIENCE :'SOCIAL_SCIENCE'
+    SOCIAL_SCIENCE :'SOCIAL_SCIENCE',
+	FRONTEND :'FRONTEND',
+	BACKEND : 'BACKEND'
 }
 
 function model(sequelize){
 	const attributes = {
+		code:{
+			type : DataTypes.STRING,
+			allowNull : false
+		},
 		title:{
 			type : DataTypes.STRING,
 			allowNull : false
@@ -20,6 +26,10 @@ function model(sequelize){
 		},
 		category: {
 			type: DataTypes.ENUM(...Object.values(SubjectCategory)),
+			allowNull : false
+		},
+		credit_unit:{
+			type : DataTypes.INTEGER,
 			allowNull : false
 		}
 	}
