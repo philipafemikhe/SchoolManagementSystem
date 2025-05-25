@@ -18,15 +18,42 @@ async function initialize() {
     Permission = require('../model/permission.model')(sequelize);
     Role = require('../model/role.model')(sequelize);
     User = require('../model/user.model')(sequelize);
+    Tenant = require('../model/tenant.model')(sequelize);
+    UserToken = require('../model/user-token.model')(sequelize);
 
 
-    User.hasOne(Role);
+    // User.hasOne(Role);
+    // Tenant.hasOne(User);
+
+    User.belongsToMany(Role, { 
+        through: 'role_user',
+      as: "roles"
+      ,foreignKey: "UserId", 
+    });
+
+    Role.belongsToMany(User, { 
+        through: 'role_user' ,
+      as: "users"
+      ,foreignKey: "RoleId",
+    });
+    
+    User.hasOne(Tenant);
+    Tenant.belongsTo(User);
+
+    User.hasOne(UserToken);
+    UserToken.belongsTo(User);
+
+
     Role.belongsToMany(Permission, { through: 'Role_Permission' });
     Permission.belongsToMany(Role, { through: 'Role_Permission' });
+
+    
     
     db.users = User;
     db.roles = Role;
     db.permissions = Permission;
+    db.tenants = Tenant;
+    db.userTokens = UserToken;
 
     // sync all models with database
     await sequelize.sync({ alter: true });

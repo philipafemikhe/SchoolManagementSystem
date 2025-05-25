@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const Joi = require('joi');
 const roleService = require('../service/role.service');
 
 // routes
+const checkAuthMiddleware = require('../_middleware/check_auth');
 
-router.get('/', getAll);
+router.get('/', checkAuthMiddleware.checkAuth, getAll);
 // router.get('/:id', getById);
-router.post('/', insertOne);
+router.post('/', checkAuthMiddleware.checkAuth, insertOne);
 // router.put('/:id', update);
 // router.delete('/:id', _delete);
 
@@ -25,3 +25,5 @@ function insertOne(req, res, next){
             .then(() => res.json({ message: 'Role created' }))
             .catch(next);
 }
+
+

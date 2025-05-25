@@ -1,0 +1,86 @@
+const util = require('util');
+const consoler = require('_helpers/consoler');
+const config = require('config.json');
+const mysql = require('mysql2/promise');
+const { Sequelize } = require('sequelize');
+
+const resolveTenant = require('../../../_middleware/resolveTenant');
+
+
+
+
+
+module.exports = {
+    getAll,
+    getById,
+    create,
+    update,
+    delete: _delete
+};
+
+async function getAll() {
+    consoler.log('Subject service, getAll initiated');
+    try{
+       return await global.tenantConnection.subject.findAll();
+    }catch(e){
+        consoler.error(e);
+        throw Error ('There was an error ' + e);
+    }
+}
+    
+
+
+async function getById(id) {
+    return await getSubject(id);
+}
+
+async function create(params) {
+    // validate
+    try{
+        if (await global.tenantConnection.subject.findOne({ where: { title: params.title } })) {
+            throw 'Title "' + params.title + '" is already registered';
+        }
+        console.log('new subject ' + params);
+        const subject = new global.tenantConnection.subject(params);
+        // save subject
+        const new_subject = await subject.save();
+        console.log('new subject Created');
+        return new_subject;
+        
+    }catch(e){
+        console.log('Error creating subject ' + e);
+        return null;
+    }    
+}
+
+async function update(id, params) {
+    const subject = await getSubject(id); 
+
+    // validate
+    // const emailChanged = params.email && subject.email !== params.email;
+    // if (emailChanged && await global.tenantConnection.subject.findOne({ where: { email: params.email } })) {
+    //     throw 'Email "' + params.email + '" is already registered';
+    // }
+
+    // // hash password if it was entered
+    // if (params.password) {
+    //     params.passwordHash = await bcrypt.hash(params.password, 10);
+    // }
+
+    // // copy params to subject and save
+    // Object.assign(subject, params);
+    // await subject.save();
+}
+
+async function _delete(id) {
+    const subject = await getSubject(id);
+    await subject.destroy();
+}
+
+// helper functions
+
+async function getSubject(id) {
+    const subject = await global.tenantConnection.subject.findByPk(id);
+    if (!subject) throw 'Subject not found';
+    return subject;
+}
