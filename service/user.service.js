@@ -64,7 +64,7 @@ async function create(params) {
             consoler.log('new user role ' + JSON.stringify(role));
             const passwordHash = await bcrypt.hash(params.password, 10);
 
-            // if(role == Role.BUSINESS_OWNER.toString()){
+            if((role.name == Role.BUSINESS_OWNER.toString()) || (role.name == Role.EXAMINER.toString())){
                 newdb  = 'sms_' + params.lastName.substring(0,5) + Date.now();
                 const tenant = await db.tenants.create({
                     email : params.email, 
@@ -94,12 +94,12 @@ async function create(params) {
                 });
 
                 consoler.log('Tenant created ' + JSON.stringify(tenant) + ', initializing tenant database dbName = ' + newdb);
-                const conn = await resolveTenant.resolveTenant(newdb);
+                const conn = await resolveTenant.resolveTenant(newdb, role);
                 consoler.log('Tenant db setup completed ' + JSON.stringify(conn));
                 global.tenantConnection = conn;
                 consoler.log('Tenant databse migrated.');
                 return response; 
-            // }
+            }
 
                                     
         }else{
@@ -155,6 +155,9 @@ async function createTenant(newdb, user){
 
 async function findOne(email){
     const user = await db.users.findOne({
+    // where: { 
+    //     { email: { [Op.like]: `%${email}%`} } 
+    // }
     where: {
         email: email
         },

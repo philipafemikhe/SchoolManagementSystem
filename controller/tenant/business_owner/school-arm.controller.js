@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const schoolArmService = require('../../service/tenant/school-arm.service.js');
+const schoolArmService = require('../../../service/tenant/business_owner/school-arm.service.js');
 
-const checkAuthMiddleware = require('../../_middleware/check_auth');
+const checkAuthMiddleware = require('../../../_middleware/check_auth');
 
 
 const consoler = require('_helpers/consoler');

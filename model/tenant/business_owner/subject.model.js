@@ -28,7 +28,7 @@ function model(sequelize){
 			type: DataTypes.ENUM(...Object.values(SubjectCategory)),
 			allowNull : false
 		},
-		credit_unit:{
+		creditUnit:{
 			type : DataTypes.INTEGER,
 			allowNull : false
 		}

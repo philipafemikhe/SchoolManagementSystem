@@ -3,9 +3,9 @@ const router = express.Router();
 // const Joi = require('joi');
 // const validateRequest = require('_middleware/validate-request');
 // const Role = require('enum/role');
-const subjectService = require('../../service/tenant/subject.service');
+const subjectService = require('../../../service/tenant/business_owner/subject.service');
 
-const checkAuthMiddleware = require('../../_middleware/check_auth');
+const checkAuthMiddleware = require('../../../_middleware/check_auth');
 
 
 const consoler = require('_helpers/consoler');

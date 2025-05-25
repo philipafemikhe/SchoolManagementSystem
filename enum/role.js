@@ -1,6 +1,8 @@
 module.exports = {
-    ADMIN: 'Admin',
-    BUSINESS_OWNER: 'Business Owner',
-    TEACHER: 'Teacher',
-    STUDENT: 'Student'
+    ADMIN: 'ADMIN',
+    BUSINESS_OWNER: 'BUSINESS_OWNER',
+    EXAMINER : 'EXAMINER',
+    EXAM_CANDIDATE : 'EXAM_CANDIDATE',
+    TEACHER: 'TEACHER',
+    STUDENT: 'STUDENT'
 }

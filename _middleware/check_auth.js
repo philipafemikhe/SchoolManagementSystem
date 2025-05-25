@@ -85,42 +85,6 @@ async function checkAuth(req, res, next ){
 }
 
 
-
-// async function checkTenantAuth(req, res, next ){
-//     const token = req.get('token');
-//       consoler.log('checkTenantAuth - request  token ' + token);
-//       if(!token) {
-//         return res.status(401).json( { message: 'No unauthorization token provided'} );
-//       }
-
-//       try {
-//         const decoded = jwt.verify(token, jwtSecret);
-//         req.userId = decoded.userId;
-//         consoler.log('User identified with token, userId ' + decoded.userId);
-//         const user = await userService.getById(decoded.userId);
-
-//         if(user){
-//             consoler.log('User details ' + JSON.stringify(user));
-//             const tenant = await tenantService.getByEmail(user.email);
-//             if(tenant){
-//                 consoler.log('find by email ' + user.email + ', Tenant retrieved ' + JSON.stringify(tenant));
-//                 const conn = await resolveTenant.resolveTenant(tenant.database);
-//                 global.tenantConnection = conn;
-//                 consoler.log('Tenant connection established!!!');
-//             }
-            
-//         }else{
-//             res.status(401).json( { message: 'User unauthorized'} ); 
-//         }
-        
-//       } catch(error) {
-//         consoler.log(error);
-//         res.status(401).json( { message: 'User not found or invalid token provided'} );
-//       }
-//       next();
-// }
-
-
 async function checkTenantAuth(req, res, next ){
     consoler.log('global.isLogedOut ' + global.isLogedOut);
     var token = req.get('token');
@@ -174,7 +138,7 @@ async function checkTenantAuth(req, res, next ){
                     const tenant = await tenantService.getByEmail(user.email);
                     if(tenant){
                         consoler.log('find by email ' + user.email + ', Tenant retrieved ' + JSON.stringify(tenant));
-                        const conn = await resolveTenant.resolveTenant(tenant.database);
+                        const conn = await resolveTenant.resolveTenant(tenant.database, null);
                         global.tenantConnection = conn;
                         consoler.log('Tenant connection established!!!');
                     }

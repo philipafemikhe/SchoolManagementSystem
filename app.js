@@ -40,10 +40,11 @@ app.use((req, res, next)=>{
 // api routes
 app.use('/users', require('./controller/users.controller'));
 app.use('/roles', require('./controller/roles.controller'));
-app.use('/subject', require('./controller/tenant/subject.controller'));
+app.use('/subject', require('./controller/tenant/business_owner/subject.controller'));
 app.use('/auth', require('./controller/auth.controller'));
-
-app.use('/arm', require('./controller/tenant/school-arm.controller'));
+app.use('/arm', require('./controller/tenant/business_owner/school-arm.controller'));
+app.use('/examiner', require('./controller/tenant/examiner/candidate.controller'));
+app.use('/exam', require('./controller/tenant/examiner/exam.controller'));
 
 app.get('/test', (req, res) => { 
     res.send( { 
@@ -58,7 +59,6 @@ app.use((req, res)=>{
 
 // global error handler
 app.use(errorHandler);
-// app.use(resolveTenant);
 
 
 // start server

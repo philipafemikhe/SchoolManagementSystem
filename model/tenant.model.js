@@ -10,6 +10,7 @@ function model(sequelize){
         username:{ type: DataTypes.STRING, allowNull: false},
         password:{ type: DataTypes.STRING, allowNull: false},
         database:{ type: DataTypes.STRING, allowNull: false},
+        refCode:{ type: DataTypes.STRING, allowNull: false}
         // user_id: { type: DataTypes.INTEGER, references: { model: User, key: 'id' }}
     }
 
