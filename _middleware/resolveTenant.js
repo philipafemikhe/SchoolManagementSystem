@@ -18,7 +18,7 @@ async function resolveTenant(dbName, role) {
         // connect to db
         const sequelize = new Sequelize(dbName, user, password, { dialect: 'mysql' });
         
-        if(role.name == Role.BUSINESS_OWNER.toString()){
+        if((null != role) && (role.name == Role.BUSINESS_OWNER.toString())){
             consoler.log('BUSINESS_OWNER DB');
             SchoolArm = require('../model/tenant/business_owner/school_arms.model')(sequelize);
             ArmClass = require('../model/tenant/business_owner/arm_class.model')(sequelize);
@@ -33,13 +33,14 @@ async function resolveTenant(dbName, role) {
             tenantConnection.schoolArm = SchoolArm;
             tenantConnection.armClass = ArmClass;
             tenantConnection.subject = Subject;
-        }else if((role.name == Role.EXAMINER.toString()) || (role.name == Role.EXAM_CANDIDATE.toString())){
+        }else if((null == role) || (role.name == Role.EXAMINER.toString()) || (role.name == Role.EXAM_CANDIDATE.toString())){
             consoler.log('EXAMINER DB');
             // Exam = require('../model/tenant/examiner/exam.model')(sequelize);
             Exam = require('../model/tenant/examiner/exam.model')(sequelize);
             Question = require('../model/tenant/examiner/question.model')(sequelize);
             Candidate = require('../model/tenant/examiner/candidate.model')(sequelize);
             Result = require('../model/tenant/examiner/result.model')(sequelize);
+            QuestionOption = require('../model/tenant/examiner/questionOption.model')(sequelize);
             
             Exam.hasMany(Question);
             Question.belongsTo(Exam);
@@ -48,10 +49,14 @@ async function resolveTenant(dbName, role) {
             Question.belongsToMany(Candidate, { through: 'candidate_question' });
             Candidate.hasMany(Result);
 
+            Question.hasMany(QuestionOption);
+            QuestionOption.belongsTo(Question);
+
             tenantConnection.exam = Exam;
             tenantConnection.question = Question;
             tenantConnection.candidate = Candidate;
             tenantConnection.result = Result;
+            tenantConnection.questionOption = QuestionOption;
 
         }
 

@@ -154,6 +154,7 @@ async function createTenant(newdb, user){
 
 
 async function findOne(email){
+    consoler.log('Find user by email ' + email);
     const user = await db.users.findOne({
     // where: { 
     //     { email: { [Op.like]: `%${email}%`} } 
@@ -162,7 +163,8 @@ async function findOne(email){
         email: email
         },
         attributes: { include: ['passwordHash'] }
-    });
+    ,
+     include : [db.tenants ] });
     if (!user) throw 'User not found';
     return user;
 }

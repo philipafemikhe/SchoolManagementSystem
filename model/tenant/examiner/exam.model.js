@@ -30,6 +30,6 @@ function model(sequelize){
             type : DataTypes.ENUM(...Object.values(ExamStatus)),
             allowNull : false
         }
-    }
+    };
     return sequelize.define('Exam', attributes);
 }

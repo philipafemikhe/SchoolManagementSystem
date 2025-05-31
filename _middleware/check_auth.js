@@ -110,7 +110,7 @@ async function checkTenantAuth(req, res, next ){
 
             const decoded = jwt.verify(refreshToken, jwtSecret);
             req.userId = decoded.userId;
-            consoler.log('User Id ' + decoded.userId);
+            consoler.log('User Id ' + decoded.userId + ', decoded tenantId ' + decoded.tenantId);
             const r = await userService.getUserByRefreshToken(refreshToken, decoded.userId);
              if (null == r) {
                 consoler.log('User not found with provided refresh token, r is null' );
@@ -135,9 +135,10 @@ async function checkTenantAuth(req, res, next ){
 
                 if(user){
                     consoler.log('User details ' + JSON.stringify(user));
-                    const tenant = await tenantService.getByEmail(user.email);
+                    const tenant = await tenantService.getById(decoded.tenantId);
                     if(tenant){
                         consoler.log('find by email ' + user.email + ', Tenant retrieved ' + JSON.stringify(tenant));
+                        req.tenantId = decoded.tenantId;
                         const conn = await resolveTenant.resolveTenant(tenant.database, null);
                         global.tenantConnection = conn;
                         consoler.log('Tenant connection established!!!');
@@ -165,6 +166,14 @@ async function checkTenantAuth(req, res, next ){
             const user = userService.getById(decoded.userId);
             if(user){
                 consoler.log('User verified with token');
+                const tenant = await tenantService.getById(decoded.tenantId);
+                if(tenant){
+                    consoler.log('find by tenantId ' + decoded.tenantId + ', Tenant retrieved ' + JSON.stringify(tenant));
+                    req.tenantId = decoded.tenantId;
+                    const conn = await resolveTenant.resolveTenant(tenant.database, null);
+                    global.tenantConnection = conn;
+                    consoler.log('Tenant connection established!!!');
+                }
                 next();
             }else{
                 consoler.log('User not verified');
@@ -201,13 +210,14 @@ async function generateNewToken(token){
         consoler.log('generateNewToken decoded: ' + JSON.stringify(decoded));
 
         userId = decoded.userId;
+        tenantId = decoded.tenantId;
         user = await userService.getById(userId);
         consoler.log('userId: ' + userId + ', user: ' + JSON.stringify(user));
-        const accessToken = jwt.sign({ userId: user.id, email: user.email}, jwtSecret , {
+        const accessToken = jwt.sign({ userId: user.id, email: user.email, tenantId: tenantId }, jwtSecret , {
                 expiresIn: "2m"
             });
 
-        const refreshToken = jwt.sign({ userId: user.id, email: user.email}, jwtSecret , {
+        const refreshToken = jwt.sign({ userId: user.id, email: user.email, tenantId: tenantId }, jwtSecret , {
             expiresIn: "24h"
         });
         consoler.log('accessToken ' + accessToken + ', refreshToken ' + refreshToken);

@@ -36,6 +36,14 @@ function model(sequelize){
             type : DataTypes.STRING,
             allowNull : false
         }
-    }
-    return sequelize.define('Candidate', attributes);
+    };
+    const options = {
+        defaultScope: {
+            attributes: { exclude: ['password'] }
+        },
+        scopes: {
+            withHash: { attributes: {}, }
+        }
+    };
+    return sequelize.define('Candidate', attributes, options);
 }

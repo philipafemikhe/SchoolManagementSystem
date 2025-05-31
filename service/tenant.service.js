@@ -6,7 +6,8 @@ const db = require('../_helpers/db');
 const resolveTenant = require('../_middleware/resolveTenant');
 
 module.exports = {
-    getByEmail
+    getByEmail,
+    getById
 };
 
 async function getByEmail(email) {
@@ -25,5 +26,6 @@ async function getByEmail(email) {
 
 
 async function getById(id) {
-    return await getSubject(id);
+    consoler.log('Get tenant by id ' + id);
+    return await db.tenants.findByPk(id);
 }

@@ -45,6 +45,7 @@ app.use('/auth', require('./controller/auth.controller'));
 app.use('/arm', require('./controller/tenant/business_owner/school-arm.controller'));
 app.use('/examiner', require('./controller/tenant/examiner/candidate.controller'));
 app.use('/exam', require('./controller/tenant/examiner/exam.controller'));
+app.use('/question', require('./controller/tenant/examiner/question.controller'));
 
 app.get('/test', (req, res) => { 
     res.send( { 

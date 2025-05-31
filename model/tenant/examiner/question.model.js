@@ -7,7 +7,9 @@ module.exports = model;
 const QuestionType = {
     MULTIPLE_CHOICE : 'MULTIPLE_CHOICE',
     SHORT_ANSWER : 'SHORT_ANSWER',
-    DRAG_DROP : 'DRAG_DROP'
+    DRAG_DROP : 'DRAG_DROP',
+    MATCHING : 'MATCHING',
+    ESSAY : 'ESSAY'
 }
 
 function model(sequelize){
@@ -23,7 +25,6 @@ function model(sequelize){
         marks:{
             type : DataTypes.INTEGER
         }
-    }
-
+    };
     return sequelize.define('Question', attributes);
 }
